@@ -1,0 +1,333 @@
+{
+  "datasets": [
+    {
+      "name": "e99ae188",
+      "displayName": "d_status",
+      "config": {
+        "version": "1.1",
+        "source": "workspace.glpi.d_status",
+        "dimensions": [
+          {
+            "name": "status_id",
+            "expr": "source.status_id",
+            "displayName": "Status Id"
+          },
+          {
+            "name": "status_descricao",
+            "expr": "source.status_descricao",
+            "displayName": "Status Descricao"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Representa o número total de linhas no conjunto de dados. Use essa medida para contar todos",
+            "displayName": "Contagem"
+          }
+        ]
+      }
+    },
+    {
+      "name": "cd4b780b",
+      "displayName": "d_users",
+      "config": {
+        "version": "1.1",
+        "source": "workspace.glpi.d_users",
+        "dimensions": [
+          {
+            "name": "user_id",
+            "expr": "source.user_id",
+            "displayName": "User Id"
+          },
+          {
+            "name": "login",
+            "expr": "source.login",
+            "displayName": "Login"
+          },
+          {
+            "name": "nome_completo",
+            "expr": "source.nome_completo",
+            "displayName": "Nome Completo"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Representa o número total de linhas no conjunto de dados. Use essa medida para contar todos",
+            "displayName": "Contagem"
+          }
+        ]
+      }
+    },
+    {
+      "name": "1ff0beee",
+      "displayName": "f_tickets",
+      "config": {
+        "version": "1.1",
+        "source": "workspace.glpi.f_tickets",
+        "dimensions": [
+          {
+            "name": "ticket_id",
+            "expr": "source.ticket_id",
+            "displayName": "Ticket Id"
+          },
+          {
+            "name": "itilcategories_id",
+            "expr": "source.itilcategories_id",
+            "displayName": "Itilcategories Id"
+          },
+          {
+            "name": "entities_id",
+            "expr": "source.entities_id",
+            "displayName": "Entities Id"
+          },
+          {
+            "name": "status_id",
+            "expr": "source.status_id",
+            "displayName": "Status Id"
+          },
+          {
+            "name": "priority",
+            "expr": "source.priority",
+            "displayName": "Priority"
+          },
+          {
+            "name": "urgency",
+            "expr": "source.urgency",
+            "displayName": "Urgency"
+          },
+          {
+            "name": "impact",
+            "expr": "source.impact",
+            "displayName": "Impact"
+          },
+          {
+            "name": "data_criacao",
+            "expr": "source.data_criacao",
+            "displayName": "Data Criacao"
+          },
+          {
+            "name": "data_abertura",
+            "expr": "source.data_abertura",
+            "displayName": "Data Abertura"
+          },
+          {
+            "name": "data_modificacao",
+            "expr": "source.data_modificacao",
+            "displayName": "Data Modificacao"
+          },
+          {
+            "name": "data_solucao",
+            "expr": "source.data_solucao",
+            "displayName": "Data Solucao"
+          },
+          {
+            "name": "data_fechamento",
+            "expr": "source.data_fechamento",
+            "displayName": "Data Fechamento"
+          },
+          {
+            "name": "horas_resolucao",
+            "expr": "source.horas_resolucao",
+            "displayName": "Horas Resolucao"
+          },
+          {
+            "name": "deletado",
+            "expr": "source.deletado",
+            "displayName": "Deletado"
+          },
+          {
+            "name": "titulo",
+            "expr": "source.titulo",
+            "displayName": "Titulo"
+          },
+          {
+            "name": "content",
+            "expr": "source.content",
+            "displayName": "Content"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Representa o número total de linhas no conjunto de dados. Use essa medida para contar todos",
+            "displayName": "Contagem"
+          }
+        ]
+      }
+    },
+    {
+      "name": "806e033a",
+      "displayName": "f_ticketsatisfactions",
+      "config": {
+        "version": "1.1",
+        "source": "workspace.glpi.f_ticketsatisfactions",
+        "dimensions": [
+          {
+            "name": "satisfacao_id",
+            "expr": "source.satisfacao_id",
+            "displayName": "Satisfacao Id"
+          },
+          {
+            "name": "ticket_id",
+            "expr": "source.ticket_id",
+            "displayName": "Ticket Id"
+          },
+          {
+            "name": "satisfaction",
+            "expr": "source.satisfaction",
+            "displayName": "Satisfaction"
+          },
+          {
+            "name": "comment",
+            "expr": "source.comment",
+            "displayName": "Comment"
+          },
+          {
+            "name": "date_begin",
+            "expr": "source.date_begin",
+            "displayName": "Date Begin"
+          },
+          {
+            "name": "date_answered",
+            "expr": "source.date_answered",
+            "displayName": "Date Answered"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Representa o número total de linhas no conjunto de dados. Use essa medida para contar todos",
+            "displayName": "Contagem"
+          }
+        ]
+      }
+    },
+    {
+      "name": "0f0ee148",
+      "displayName": "p_tickets_users",
+      "config": {
+        "version": "1.1",
+        "source": "workspace.glpi.p_tickets_users",
+        "dimensions": [
+          {
+            "name": "ticket_id",
+            "expr": "source.ticket_id",
+            "displayName": "Ticket Id"
+          },
+          {
+            "name": "usuario_id",
+            "expr": "source.usuario_id",
+            "displayName": "Usuario Id"
+          },
+          {
+            "name": "tipo_relacionamento",
+            "expr": "source.tipo_relacionamento",
+            "displayName": "Tipo Relacionamento"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Representa o número total de linhas no conjunto de dados. Use essa medida para contar todos",
+            "displayName": "Contagem"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ded33027",
+      "displayName": "Tempo Médio de Resolução",
+      "queryLines": [
+        "-- Tempo Médio de Resolução\r\n",
+        "SELECT\r\n",
+        "\r\n",
+        "    ROUND(AVG(horas_resolucao),2) AS horas_medias\r\n",
+        "\r\n",
+        "FROM workspace.glpi.f_tickets\r\n",
+        "\r\n",
+        "WHERE horas_resolucao IS NOT NULL;"
+      ],
+      "catalog": "workspace",
+      "schema": "glpi"
+    },
+    {
+      "name": "fb272e76",
+      "displayName": "Tickets Criados por Dia",
+      "queryLines": [
+        "-- tickets Criados por Dia\r\n",
+        "SELECT\r\n",
+        "\r\n",
+        "    DATE(data_criacao) AS data,\r\n",
+        "    COUNT(*) AS quantidade\r\n",
+        "\r\n",
+        "FROM workspace.glpi.f_tickets\r\n",
+        "\r\n",
+        "GROUP BY DATE(data_criacao)\r\n",
+        "\r\n",
+        "ORDER BY data;"
+      ]
+    },
+    {
+      "name": "1692b744",
+      "displayName": "Tickets por Prioridade",
+      "queryLines": [
+        "-- Tickets por Prioridade\r\n",
+        "SELECT\r\n",
+        "\r\n",
+        "    priority,\r\n",
+        "    COUNT(*) AS quantidade\r\n",
+        "\r\n",
+        "FROM workspace.glpi.f_tickets\r\n",
+        "\r\n",
+        "GROUP BY priority\r\n",
+        "\r\n",
+        "ORDER BY priority;"
+      ]
+    },
+    {
+      "name": "0de8324a",
+      "displayName": "Tickets por Status",
+      "queryLines": [
+        "-- Tickets por Status\r\n",
+        "SELECT\r\n",
+        "\r\n",
+        "    s.status_descricao,\r\n",
+        "    COUNT(*) AS quantidade\r\n",
+        "\r\n",
+        "FROM workspace.glpi.f_tickets t\r\n",
+        "\r\n",
+        "INNER JOIN workspace.glpi.d_status s\r\n",
+        "    ON t.status_id = s.status_id\r\n",
+        "    \r\n",
+        "WHERE t.deletado = false\r\n",
+        "\r\n",
+        "GROUP BY\r\n",
+        "    s.status_descricao\r\n",
+        "\r\n",
+        "\r\n",
+        "ORDER BY\r\n",
+        "    quantidade DESC;"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "a9b6765d",
+      "displayName": "Dashboard",
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}

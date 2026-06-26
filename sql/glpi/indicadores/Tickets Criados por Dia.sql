@@ -1,0 +1,10 @@
+SELECT
+
+    DATE(data_criacao) AS data,
+    COUNT(*) AS quantidade
+
+FROM workspace.glpi.f_tickets
+
+GROUP BY DATE(data_criacao)
+
+ORDER BY data;
