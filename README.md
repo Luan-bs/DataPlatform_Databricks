@@ -224,6 +224,7 @@ Foi criado um Workflow na seção Jobs and Pipelines chamado:
 ```
 GLPI Pipeline
 ```
+![Dashboard](img/Pipeline_Jobs.png)
 
 Fluxo:
 
@@ -236,14 +237,15 @@ Fluxo:
     ▼
   Gold
 ```
+![Dashboard](img/Tarefas.png)
 
-O Workflow executa automaticamente todos os dias às 12:00.
+O Workflow pode ser agendado para executar todos os dias no horario de escolha.
 
 ---
 
 # Dashboards
 
-As consultas SQL são criadas no SQL Editor.
+As consultas SQL são criadas no SQL Editor ou na camada gold como views.
 
 Arquivo json em dashboards/
 
@@ -251,6 +253,8 @@ Essas consultas alimentam os Dashboards do Databricks.
 
 Exemplos:
 
+* Total de Chamados
+* Chamados por Atendente
 * Tickets por Status
 * Tickets por Prioridade
 * Tempo Médio de Resolução
