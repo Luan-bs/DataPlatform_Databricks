@@ -82,7 +82,7 @@ Schema:
 ```
 glpi.bronze / glpi.silver / glpi.gold_chamados
 ```
-
+![Dashboard](img/Catalog.png)
 Todas as tabelas nos schemas estão no padrão delta.
 
 ---
@@ -160,6 +160,7 @@ Responsável pela padronização dos dados.
 Principais transformações:
 
 * Remoção de duplicidades
+* Remoção de chamados deletados
 * Seleção da versão mais recente dos registros
 * Renomeação de colunas
 * Padronização de tipos
@@ -211,6 +212,15 @@ Ponte
 
 ```
 p_tickets_users
+```
+
+Views com métricas prontas
+
+```
+v_total_chamados
+v_chamados_abertos
+v_chamados_fechados
+...
 ```
 
 A modelagem preserva todos os relacionamentos entre tickets e usuários, permitindo análises de solicitantes, técnicos e demais participantes.
