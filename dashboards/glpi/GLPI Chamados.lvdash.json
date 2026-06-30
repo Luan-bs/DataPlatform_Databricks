@@ -1,11 +1,11 @@
 {
   "datasets": [
     {
-      "name": "e99ae188",
+      "name": "03722006",
       "displayName": "d_status",
       "config": {
         "version": "1.1",
-        "source": "workspace.glpi.d_status",
+        "source": "glpi.gold_chamados.d_status",
         "dimensions": [
           {
             "name": "status_id",
@@ -29,11 +29,11 @@
       }
     },
     {
-      "name": "cd4b780b",
+      "name": "ca9e7640",
       "displayName": "d_users",
       "config": {
         "version": "1.1",
-        "source": "workspace.glpi.d_users",
+        "source": "glpi.gold_chamados.d_users",
         "dimensions": [
           {
             "name": "user_id",
@@ -62,11 +62,11 @@
       }
     },
     {
-      "name": "1ff0beee",
+      "name": "85a6973b",
       "displayName": "f_tickets",
       "config": {
         "version": "1.1",
-        "source": "workspace.glpi.f_tickets",
+        "source": "glpi.gold_chamados.f_tickets",
         "dimensions": [
           {
             "name": "ticket_id",
@@ -160,11 +160,11 @@
       }
     },
     {
-      "name": "806e033a",
+      "name": "cad435ef",
       "displayName": "f_ticketsatisfactions",
       "config": {
         "version": "1.1",
-        "source": "workspace.glpi.f_ticketsatisfactions",
+        "source": "glpi.gold_chamados.f_ticketsatisfactions",
         "dimensions": [
           {
             "name": "satisfacao_id",
@@ -208,11 +208,11 @@
       }
     },
     {
-      "name": "0f0ee148",
+      "name": "672dd940",
       "displayName": "p_tickets_users",
       "config": {
         "version": "1.1",
-        "source": "workspace.glpi.p_tickets_users",
+        "source": "glpi.gold_chamados.p_tickets_users",
         "dimensions": [
           {
             "name": "ticket_id",
@@ -241,85 +241,514 @@
       }
     },
     {
-      "name": "ded33027",
-      "displayName": "Tempo Médio de Resolução",
+      "name": "9c8709c2",
+      "displayName": "Total de Chamados",
       "queryLines": [
-        "-- Tempo Médio de Resolução\r\n",
-        "SELECT\r\n",
-        "\r\n",
-        "    ROUND(AVG(horas_resolucao),2) AS horas_medias\r\n",
-        "\r\n",
-        "FROM workspace.glpi.f_tickets\r\n",
-        "\r\n",
-        "WHERE horas_resolucao IS NOT NULL;"
+        "SELECT COUNT(*) AS Total\r\n",
+        "FROM f_tickets\r\n",
+        "WHERE deletado = FALSE"
       ],
-      "catalog": "workspace",
-      "schema": "glpi"
+      "catalog": "glpi",
+      "schema": "gold_chamados"
     },
     {
-      "name": "fb272e76",
-      "displayName": "Tickets Criados por Dia",
+      "name": "82693f58",
+      "displayName": "Chamados Fechados",
       "queryLines": [
-        "-- tickets Criados por Dia\r\n",
         "SELECT\r\n",
-        "\r\n",
-        "    DATE(data_criacao) AS data,\r\n",
-        "    COUNT(*) AS quantidade\r\n",
-        "\r\n",
-        "FROM workspace.glpi.f_tickets\r\n",
-        "\r\n",
-        "GROUP BY DATE(data_criacao)\r\n",
-        "\r\n",
-        "ORDER BY data;"
-      ]
+        "COUNT(f.ticket_id) AS Fechados\r\n",
+        "FROM f_tickets f\r\n",
+        "JOIN d_status d on f.status_id = d.status_id\r\n",
+        "WHERE d.status_descricao = \"Chamado Fechado\" AND f.deletado = false"
+      ],
+      "catalog": "glpi",
+      "schema": "gold_chamados"
     },
     {
-      "name": "1692b744",
-      "displayName": "Tickets por Prioridade",
+      "name": "746eeb7a",
+      "displayName": "Chamados Abertos",
       "queryLines": [
-        "-- Tickets por Prioridade\r\n",
         "SELECT\r\n",
-        "\r\n",
-        "    priority,\r\n",
-        "    COUNT(*) AS quantidade\r\n",
-        "\r\n",
-        "FROM workspace.glpi.f_tickets\r\n",
-        "\r\n",
-        "GROUP BY priority\r\n",
-        "\r\n",
-        "ORDER BY priority;"
-      ]
+        "COUNT(ticket_id) AS Abertos\r\n",
+        "FROM f_tickets \r\n",
+        "WHERE status_id IN (4,2,3) AND deletado = false"
+      ],
+      "catalog": "glpi",
+      "schema": "gold_chamados"
     },
     {
-      "name": "0de8324a",
-      "displayName": "Tickets por Status",
+      "name": "fc1565fc",
+      "displayName": "Positivos e Negativos",
       "queryLines": [
-        "-- Tickets por Status\r\n",
         "SELECT\r\n",
-        "\r\n",
-        "    s.status_descricao,\r\n",
-        "    COUNT(*) AS quantidade\r\n",
-        "\r\n",
-        "FROM workspace.glpi.f_tickets t\r\n",
-        "\r\n",
-        "INNER JOIN workspace.glpi.d_status s\r\n",
-        "    ON t.status_id = s.status_id\r\n",
-        "    \r\n",
-        "WHERE t.deletado = false\r\n",
-        "\r\n",
-        "GROUP BY\r\n",
-        "    s.status_descricao\r\n",
-        "\r\n",
-        "\r\n",
-        "ORDER BY\r\n",
-        "    quantidade DESC;"
-      ]
+        "  ROUND(\r\n",
+        "    SUM(CASE WHEN satisfaction >= 4 THEN 1 ELSE 0 END)\r\n",
+        "    / COUNT(*)\r\n",
+        "    ,2\r\n",
+        "  ) AS Positivos,\r\n",
+        "  SUM(CASE WHEN satisfaction >= 4 THEN 1 ELSE 0 END) AS Qtd_Positivos,\r\n",
+        "  ROUND(\r\n",
+        "    SUM(CASE WHEN satisfaction <= 3 THEN 1 ELSE 0 END)\r\n",
+        "    / COUNT(*)\r\n",
+        "    ,2\r\n",
+        "  ) AS Negativos,\r\n",
+        "  SUM(CASE WHEN satisfaction <= 3 THEN 1 ELSE 0 END) AS Qtd_Negativos\r\n",
+        "FROM f_ticketsatisfactions\r\n",
+        "WHERE satisfaction IS NOT NULL"
+      ],
+      "catalog": "glpi",
+      "schema": "gold_chamados"
+    },
+    {
+      "name": "6f76ad91",
+      "displayName": "Chamados por Atendente",
+      "queryLines": [
+        "SELECT\r\n",
+        "    u.nome_completo,\r\n",
+        "    COUNT(*) AS Chamados\r\n",
+        "FROM p_tickets_users tu\r\n",
+        "JOIN d_users u\r\n",
+        "ON tu.usuario_id = u.user_id\r\n",
+        "WHERE tu.tipo_relacionamento = 'Técnico'\r\n",
+        "GROUP BY u.nome_completo\r\n",
+        "ORDER BY Chamados DESC"
+      ],
+      "catalog": "glpi",
+      "schema": "gold_chamados"
     }
   ],
   "pages": [
     {
-      "name": "a9b6765d",
-      "displayName": "Dashboard",
+      "name": "59250613",
+      "displayName": "Painel Geral",
+      "layout": [
+        {
+          "widget": {
+            "name": "total",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "9c8709c2",
+                  "fields": [
+                    {
+                      "name": "sum(Total)",
+                      "expression": "SUM(`Total`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Total de Chamados",
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(Total)",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 3
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "2febaa2f",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "82693f58",
+                  "fields": [
+                    {
+                      "name": "sum(Fechados)",
+                      "expression": "SUM(`Fechados`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Fechados",
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(Fechados)",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 3
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 0,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "cha",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "746eeb7a",
+                  "fields": [
+                    {
+                      "name": "sum(Abertos)",
+                      "expression": "SUM(`Abertos`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Abertos",
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(Abertos)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 0,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "aval",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "fc1565fc",
+                  "fields": [
+                    {
+                      "name": "sum(Qtd_Positivos)",
+                      "expression": "SUM(`Qtd_Positivos`)"
+                    },
+                    {
+                      "name": "sum(Positivos)",
+                      "expression": "SUM(`Positivos`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Avaliações Positivas",
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(Positivos)",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                },
+                "target": {
+                  "fieldName": "sum(Qtd_Positivos)",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  },
+                  "style": {
+                    "fontSize": 14,
+                    "bold": true,
+                    "color": {
+                      "themeColorType": "visualizationColors",
+                      "position": 3
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 0,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "21faabe0",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "fc1565fc",
+                  "fields": [
+                    {
+                      "name": "Qtd_Negativos",
+                      "expression": "`Qtd_Negativos`"
+                    },
+                    {
+                      "name": "Negativos",
+                      "expression": "`Negativos`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Avaliações Negativas",
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "Negativos",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                },
+                "target": {
+                  "fieldName": "Qtd_Negativos",
+                  "style": {
+                    "bold": true,
+                    "color": {
+                      "themeColorType": "visualizationColors",
+                      "position": 4
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 0,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "chamados",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "6f76ad91",
+                  "fields": [
+                    {
+                      "name": "sum(Chamados)",
+                      "expression": "SUM(`Chamados`)"
+                    },
+                    {
+                      "name": "nome_completo",
+                      "expression": "`nome_completo`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Chamados por Atendente",
+                "headerAlignment": "center"
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "sum(Chamados)",
+                  "axis": {
+                    "hideTitle": true,
+                    "hideLabels": false,
+                    "hideGrid": false
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "nome_completo",
+                  "axis": {
+                    "hideTitle": true
+                  },
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "x-reversed"
+                    }
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBackgroundColor": {
+                "light": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "b531cd81",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "03722006",
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {}
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 2,
+            "width": 6,
+            "height": 6
+          }
+        }
+      ],
       "pageType": "PAGE_TYPE_CANVAS",
       "layoutVersion": "GRID_V1"
     }

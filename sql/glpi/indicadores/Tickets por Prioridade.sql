@@ -3,7 +3,7 @@ SELECT
     priority,
     COUNT(*) AS quantidade
 
-FROM workspace.glpi.f_tickets
+FROM glpi.gold_chamados.f_tickets
 
 GROUP BY priority
 

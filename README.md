@@ -11,13 +11,15 @@ Como caso de estudo foi utilizado o GLPI, porém toda a estrutura foi pensada pa
 # Arquitetura
 
 ```
-CSV
+ glpi(catalog)
+    
+       CSV
         │
         ▼
-Volumes (Raw)
+Volumes (Raw) -- Esta camada pode ser direta da fonte (glpi Mysql)
         │
         ▼
-Bronze (Delta)
+Bronze (Delta) 
         │
         ▼
 Silver (Delta)
@@ -72,16 +74,16 @@ Workspace
 Foi utilizado um único catálogo chamado:
 
 ```
-workspace
+glpi
 ```
 
 Schema:
 
 ```
-workspace.glpi
+glpi.bronze / glpi.silver / glpi.gold_chamados
 ```
 
-Todas as tabelas Delta ficam neste schema.
+Todas as tabelas nos schemas estão no padrão delta.
 
 ---
 
@@ -92,24 +94,24 @@ Foi criado apenas o volume Raw.
 ```
 workspace (Espaço de trabalho)
     └──  Unity Catalog (seção sidebar = Catalog)
-            └── workspace (catalog)
-                    └── glpi (Schema)
-                        ├── Volumes 
-                        │   └── raw
-                        │       ├── glpi_tickets.csv
-                        │       ├── glpi_users.csv
-                        │       ├── glpi_tickets_users.csv
-                        │       ├── glpi_tickets_tickets.csv
-                        │       └── glpi_ticketsatisfactions.csv
-                        │
-                        ├── bronze_tickets
-                        ├── bronze_users
-                        ├── ...
-                        │
-                        ├── silver_tickets
-                        ├── silver_users
-                        ├── ...
-                        │
+            └── glpi (catalog)
+                │
+                ├── bronze (Schema)
+                │   ├── Volumes 
+                │   │    └── raw
+                │   │        ├── glpi_tickets.csv
+                │   │        ├── glpi_users.csv
+                │   │        ├── ...
+                │   ├── glpi_tickets
+                │   ├── glpi_users
+                │   ├── ...               │   
+                │   
+                ├── silver (Schema)
+                │        ├── tickets
+                │        ├── users
+                │        ├── ...
+                │
+                ├── gold_chamados (Schema)
                         ├── d_status
                         ├── d_users
                         ├── f_tickets
@@ -136,15 +138,15 @@ Processo:
 Tabelas:
 
 ```
-bronze_tickets
+glpi_tickets
 
-bronze_users
+glpi_users
 
-bronze_tickets_users
+glpi_tickets_users
 
-bronze_tickets_tickets
+glpi_tickets_tickets
 
-bronze_ticketsatisfactions
+glpi_ticketsatisfactions
 ```
 
 Nenhuma transformação é realizada nesta etapa.
@@ -168,15 +170,15 @@ Principais transformações:
 Tabelas:
 
 ```
-silver_tickets
+tickets
 
-silver_users
+users
 
-silver_ticket_users
+ticket_users
 
-silver_tickets_tickets
+tickets_tickets
 
-silver_ticketsatisfactions
+ticketsatisfactions
 ```
 
 Toda a lógica foi implementada utilizando Spark SQL.
@@ -185,7 +187,9 @@ Toda a lógica foi implementada utilizando Spark SQL.
 
 # Camada Gold
 
-Modelo dimensional para consumo analítico.
+Modelo dimensional para consumo analítico do modelo de negócio.
+
+### Mart Chamados 
 
 Dimensões
 
@@ -224,13 +228,13 @@ GLPI Pipeline
 Fluxo:
 
 ```
-Bronze
+ Bronze
     │
     ▼
-Silver
+ Silver
     │
     ▼
-Gold
+  Gold
 ```
 
 O Workflow executa automaticamente todos os dias às 12:00.
